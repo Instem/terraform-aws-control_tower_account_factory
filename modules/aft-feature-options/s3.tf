@@ -40,15 +40,21 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "aft_logging_bucke
 resource "aws_s3_bucket_lifecycle_configuration" "aft_logging_bucket_lifecycle_configuration" {
   provider = aws.log_archive
   bucket   = aws_s3_bucket.aft_logging_bucket.id
+
+  transition_default_minimum_object_size = "varies_by_storage_class"
+
   rule {
     status = "Enabled"
     id     = "aft_logging_bucket_lifecycle_configuration_rule"
+
+    filter {
+      prefix = ""
+    }
 
     noncurrent_version_expiration {
       noncurrent_days = var.log_archive_bucket_object_expiration_days
     }
   }
-
 }
 
 resource "aws_s3_bucket_policy" "aft_logging_bucket" {
@@ -97,18 +103,21 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "aft_access_logs_e
 resource "aws_s3_bucket_lifecycle_configuration" "aft_access_logs_lifecycle_configuration" {
   provider = aws.log_archive
   bucket   = aws_s3_bucket.aft_access_logs.id
+
+  transition_default_minimum_object_size = "varies_by_storage_class"
+
   rule {
     status = "Enabled"
+    id     = "aft_access_logs_lifecycle_configuration_rule"
+
     filter {
       prefix = "log/"
     }
-    id = "aft_access_logs_lifecycle_configuration_rule"
 
     noncurrent_version_expiration {
       noncurrent_days = var.log_archive_bucket_object_expiration_days
     }
   }
-
 }
 
 resource "aws_s3_bucket_acl" "aft_access_logs_acl" {

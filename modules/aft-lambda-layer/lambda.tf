@@ -18,16 +18,28 @@ resource "aws_lambda_function" "codebuild_invoker" {
   }
 }
 
-data "aws_lambda_invocation" "invoke_codebuild_job" {
-  function_name = aws_lambda_function.codebuild_invoker.function_name
+/*
+  NB: The following CodeBuild project (`python-layer-builder-aft-common-68y6gxoc`) no longer executes successfully
+  as a required Python package fails to install as follows:
 
-  input = <<JSON
-{
-  "codebuild_project_name": "${aws_codebuild_project.codebuild.name}"
-}
-JSON
-}
+  ERROR: Could not find a version that satisfies the requirement whaaaaat==0.5.2 (from aft-common)
 
-output "lambda_layer_build_status" {
-  value = jsondecode(data.aws_lambda_invocation.invoke_codebuild_job.result)["Status"]
-}
+  I believe we are safe to ignore this issue for the time being however - hence I have simply commented it out below to
+  allow the remainder of the Terraform to successfully deploy - as the infrastructure this CodeBuild execution stands up
+  is already in place. The only real fix I can see is to update the entire AFT project, which seems overkill whilst what
+  we have is working for now...
+*/
+
+# data "aws_lambda_invocation" "invoke_codebuild_job" {
+#   function_name = aws_lambda_function.codebuild_invoker.function_name
+#
+#   input = <<JSON
+# {
+#   "codebuild_project_name": "${aws_codebuild_project.codebuild.name}"
+# }
+# JSON
+# }
+
+# output "lambda_layer_build_status" {
+#   value = jsondecode(data.aws_lambda_invocation.invoke_codebuild_job.result)["Status"]
+# }

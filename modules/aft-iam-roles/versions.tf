@@ -7,7 +7,7 @@ terraform {
   required_providers {
     aws = {
       source                = "hashicorp/aws"
-      version               = ">= 4.9.0"
+      version               = ">= 5.94.1"
       configuration_aliases = [aws.ct_management, aws.log_archive, aws.audit, aws.aft_management]
     }
   }
