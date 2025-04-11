@@ -145,7 +145,7 @@ resource "aws_codepipeline" "codestar_account_request" {
         ConnectionArn        = lookup({ github = local.connection_arn.github, bitbucket = local.connection_arn.bitbucket, githubenterprise = local.connection_arn.githubenterprise }, var.vcs_provider)
         FullRepositoryId     = var.account_request_repo_name
         BranchName           = var.account_request_repo_branch
-        DetectChanges        = true
+        DetectChanges        = false # CW 11.04.25 - require Pipeline to be manually triggered
         OutputArtifactFormat = "CODE_ZIP"
       }
     }
@@ -162,7 +162,7 @@ resource "aws_codepipeline" "codestar_account_request" {
         ConnectionArn        = local.connection_arn.github
         FullRepositoryId     = "Instem/hotel-accounts"
         BranchName           = "main"
-        DetectChanges        = true
+        DetectChanges        = false # CW 11.04.25 - require Pipeline to be manually triggered
         OutputArtifactFormat = "CODE_ZIP"
       }
     }
